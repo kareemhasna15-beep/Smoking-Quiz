@@ -3,86 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Smoking Assessment</title>
+<title>Smoking Test</title>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  text-align: center;
+  background: #f4f6fb;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .container {
-  max-width: 500px;
-  margin: auto;
+  width: 100%;
+  max-width: 560px;
   padding: 20px;
 }
 
-h2 {
-  margin-top: 20px;
-  color: #333;
+.main-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1f2a44;
+  margin: 10px 0 24px;
 }
 
-.card {
+.screen {
   background: white;
-  padding: 20px;
-  margin: 20px 0;
-  border-radius: 15px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  padding: 28px;
+  border-radius: 22px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-.options {
+.start-screen h2,
+.question-card h3,
+.result-box h2 {
+  margin-top: 0;
+  color: #1f2a44;
+}
+
+.start-text {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.legend {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f8f9fc;
+  padding: 12px 14px;
+  border-radius: 14px;
+}
+
+.legend-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-item span {
+  color: #333;
+  font-size: 15px;
+}
+
+.header {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.progress {
+  height: 100%;
+  background: #4CAF50;
+  width: 0%;
+  transition: 0.3s;
+}
+
+.question-card {
+  text-align: center;
+}
+
+.answers {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 25px;
 }
 
 .circle {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 2px solid #ccc;
   cursor: pointer;
-  transition: 0.2s;
+  border: 3px solid transparent;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.circle:nth-child(1),
+.legend-circle.sd { background: #ff6b6b; }
+
+.circle:nth-child(2),
+.legend-circle.d { background: #ffa94d; }
+
+.circle:nth-child(3),
+.legend-circle.n { background: #ced4da; }
+
+.circle:nth-child(4),
+.legend-circle.a { background: #69db7c; }
+
+.circle:nth-child(5),
+.legend-circle.sa { background: #38d9a9; }
 
 .circle:hover {
-  transform: scale(1.1);
-}
-
-.selected {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+  transform: scale(1.15);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
 }
 
 .labels {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  margin-top: 5px;
-  color: #666;
+  margin-top: 8px;
+  color: #555;
+}
+
+#result {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.result-text {
+  font-size: 26px;
+  font-weight: bold;
 }
 
 button {
-  padding: 15px;
-  width: 100%;
+  margin-top: 20px;
+  padding: 13px 22px;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   background: #4CAF50;
   color: white;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 button:hover {
   background: #45a049;
+  transform: translateY(-1px);
 }
 
-#result {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 20px;
+.hidden {
+  display: none;
 }
 </style>
 </head>
@@ -90,12 +187,67 @@ button:hover {
 <body>
 
 <div class="container">
-  <h2>Smoking Behavior Test</h2>
-  <p>Choose how accurately each statement reflects you</p>
+  <div class="main-title">Smoking quiz are you ready ?</div>
 
-  <div id="quiz"></div>
+  <div id="startScreen" class="screen start-screen">
+    <h2>Before you start</h2>
+    <p class="start-text">
+      Each circle shows how much you agree or disagree with the question. Choose the color that matches your answer.
+    </p>
 
-  <button onclick="calculate()">See Result</button>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-circle sd"></div>
+        <span><strong>Strongly Disagree</strong> — Red</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle d"></div>
+        <span><strong>Disagree</strong> — Orange</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle n"></div>
+        <span><strong>Neutral</strong> — Gray</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle a"></div>
+        <span><strong>Agree</strong> — Light Green</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-circle sa"></div>
+        <span><strong>Strongly Agree</strong> — Green</span>
+      </div>
+    </div>
+
+    <button onclick="startQuiz()">Start</button>
+  </div>
+
+  <div id="quizScreen" class="hidden">
+    <div class="header">
+      <span id="step">Step 1 of 8</span>
+      <span id="percent">0%</span>
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="screen question-card">
+      <h3 id="question"></h3>
+
+      <div class="answers">
+        <div class="circle" onclick="answer(1)" title="Strongly Disagree"></div>
+        <div class="circle" onclick="answer(2)" title="Disagree"></div>
+        <div class="circle" onclick="answer(3)" title="Neutral"></div>
+        <div class="circle" onclick="answer(4)" title="Agree"></div>
+        <div class="circle" onclick="answer(5)" title="Strongly Agree"></div>
+      </div>
+
+      <div class="labels">
+        <span>Strongly Disagree</span>
+        <span>Strongly Agree</span>
+      </div>
+    </div>
+  </div>
 
   <div id="result"></div>
 </div>
@@ -112,60 +264,57 @@ const questions = [
 "Do you feel irritable or uncomfortable when you don’t smoke?"
 ];
 
-let answers = new Array(questions.length).fill(null);
+let current = 0;
+let scores = [];
 
-const quiz = document.getElementById("quiz");
-
-questions.forEach((q, index) => {
-  const card = document.createElement("div");
-  card.className = "card";
-
-  card.innerHTML = `
-    <p>${q}</p>
-    <div class="options">
-      ${[1,2,3,4,5].map(num => 
-        `<div class="circle" onclick="select(${index}, ${num}, this)"></div>`
-      ).join("")}
-    </div>
-    <div class="labels">
-      <span>Strongly Disagree</span>
-      <span>Strongly Agree</span>
-    </div>
-  `;
-
-  quiz.appendChild(card);
-});
-
-function select(questionIndex, value, element) {
-  answers[questionIndex] = value;
-
-  const siblings = element.parentElement.children;
-  for (let el of siblings) el.classList.remove("selected");
-
-  element.classList.add("selected");
+function startQuiz() {
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("quizScreen").classList.remove("hidden");
+  loadQuestion();
 }
 
-function calculate() {
-  if (answers.includes(null)) {
-    alert("Please answer all questions");
-    return;
-  }
+function loadQuestion() {
+  document.getElementById("question").innerText = questions[current];
 
-  let score = answers.reduce((a, b) => a + b, 0);
+  document.getElementById("step").innerText = 
+    `Step ${current + 1} of ${questions.length}`;
+
+  let percent = Math.round((current / questions.length) * 100);
+  document.getElementById("percent").innerText = percent + "%";
+  document.getElementById("progress").style.width = percent + "%";
+}
+
+function answer(value) {
+  scores.push(value);
+  current++;
+
+  if (current < questions.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  let total = scores.reduce((a, b) => a + b, 0);
 
   let result = "";
+  if (total <= 16) result = "Non-smoker";
+  else if (total <= 28) result = "Occasional smoker";
+  else result = "Heavy smoker (addicted)";
 
-  if (score <= 16) {
-    result = "Non-smoker";
-  } else if (score <= 28) {
-    result = "Occasional smoker";
-  } else {
-    result = "Heavy smoker (addicted)";
-  }
+  document.getElementById("quizScreen").style.display = "none";
 
-  document.getElementById("result").innerText = result;
+  document.getElementById("result").innerHTML = `
+    <div class="screen result-box">
+      <h2>Your Result</h2>
+      <div class="result-text">${result}</div>
+      <button onclick="location.reload()">Restart</button>
+    </div>
+  `;
 }
 </script>
 
 </body>
 </html>
+
