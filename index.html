@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -187,7 +187,8 @@ button:hover {
 <body>
 
 <div class="container">
-  <div class="main-title">Smoking quiz are you ready ?</div>
+  <!-- FIXED TITLE -->
+  <div class="main-title">Smoking Quiz</div>
 
   <div id="startScreen" class="screen start-screen">
     <h2>Before you start</h2>
@@ -235,11 +236,11 @@ button:hover {
       <h3 id="question"></h3>
 
       <div class="answers">
-        <div class="circle" onclick="answer(1)" title="Strongly Disagree"></div>
-        <div class="circle" onclick="answer(2)" title="Disagree"></div>
-        <div class="circle" onclick="answer(3)" title="Neutral"></div>
-        <div class="circle" onclick="answer(4)" title="Agree"></div>
-        <div class="circle" onclick="answer(5)" title="Strongly Agree"></div>
+        <div class="circle" onclick="answer(1)"></div>
+        <div class="circle" onclick="answer(2)"></div>
+        <div class="circle" onclick="answer(3)"></div>
+        <div class="circle" onclick="answer(4)"></div>
+        <div class="circle" onclick="answer(5)"></div>
       </div>
 
       <div class="labels">
@@ -299,9 +300,20 @@ function showResult() {
   let total = scores.reduce((a, b) => a + b, 0);
 
   let result = "";
-  if (total <= 16) result = "Non-smoker";
-  else if (total <= 28) result = "Occasional smoker";
-  else result = "Heavy smoker (addicted)";
+  let advice = "";
+
+  if (total <= 16) {
+    result = "Non-smoker";
+    advice = `Keep choosing not to smoke and stay confident in your decision. Avoid situations where you feel pressured, and remember that saying “no” protects your health, your lungs, and your future. Staying smoke-free also helps you maintain better fitness, skin health, and overall well-being.`;
+  } 
+  else if (total <= 28) {
+    result = "Occasional smoker";
+    advice = `Stop smoking now before it becomes a regular habit. Even occasional smoking can harm your body and increase the risk of addiction. Try to identify what triggers you (stress, friends, boredom) and replace smoking with healthier alternatives like exercise, hobbies, or relaxation techniques.`;
+  } 
+  else {
+    result = "Heavy smoker (addicted)";
+    advice = `Make a clear plan to quit smoking. Set a quit date, reduce triggers, and consider using support systems such as counseling or nicotine replacement therapies (like patches or gum). Withdrawal symptoms and cravings are normal, but they pass with time. Stay committed, track your progress, and don’t give up—even if you relapse, you can always try again.`;
+  }
 
   document.getElementById("quizScreen").style.display = "none";
 
@@ -309,6 +321,7 @@ function showResult() {
     <div class="screen result-box">
       <h2>Your Result</h2>
       <div class="result-text">${result}</div>
+      <p style="margin-top:15px; line-height:1.6; color:#444;">${advice}</p>
       <button onclick="location.reload()">Restart</button>
     </div>
   `;
@@ -317,4 +330,3 @@ function showResult() {
 
 </body>
 </html>
-
